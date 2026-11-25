@@ -45,10 +45,13 @@ public final class OverlayConfigScreen extends Screen {
         bottomOffsetField = createField(center + 15, top + 112, "Bottom offset", config.y, 4);
         scaleField = createField(center - 30, top + 158, "Scale", config.scalePercent, 3);
 
+        this.addRenderableWidget(Button.builder(Component.literal("Edit position & size"),
+            button -> this.minecraft.gui.setScreen(new OverlayPositionScreen(this)))
+            .bounds(center - 100, top + 190, 200, 20).build());
         this.addRenderableWidget(Button.builder(Component.literal("Save"), button -> saveAndClose())
-            .bounds(center - 100, top + 190, 95, 20).build());
+            .bounds(center - 100, top + 216, 95, 20).build());
         this.addRenderableWidget(Button.builder(Component.literal("Cancel"), button -> this.onClose())
-            .bounds(center + 5, top + 190, 95, 20).build());
+            .bounds(center + 5, top + 216, 95, 20).build());
     }
 
     private EditBox createField(int x, int y, String label, int value, int maxLength) {
@@ -103,8 +106,8 @@ public final class OverlayConfigScreen extends Screen {
         graphics.text(this.font, "Bottom offset", center + 15, top + 98, 0xFFFFFFFF);
         graphics.text(this.font, "Scale (50-200%)", center - 100, top + 143, 0xFFFFFFFF);
         graphics.text(this.font, "Offsets are measured from the bottom-right corner.", center - 100,
-            top + 222, 0xFFAAAAAA);
+            top + 248, 0xFFAAAAAA);
         graphics.text(this.font, "Default key: O (rebind in Options > Controls)", center - 100,
-            top + 234, 0xFFAAAAAA);
+            top + 260, 0xFFAAAAAA);
     }
 }
