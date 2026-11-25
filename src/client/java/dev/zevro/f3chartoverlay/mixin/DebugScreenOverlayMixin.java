@@ -27,10 +27,7 @@ public abstract class DebugScreenOverlayMixin {
             target = "Lnet/minecraft/client/gui/components/debugchart/ProfilerPieChart;extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V"
         )
     )
-    private void f3chart$hideVanillaProfilerChart(ProfilerPieChart chart, GuiGraphicsExtractor graphics) {
-        OverlayConfig config = OverlayConfig.get();
-        if (!config.showPieChart && !config.showList) {
-            chart.extractRenderState(graphics);
-        }
+    private void f3chart$suppressVanillaProfilerChart(ProfilerPieChart chart, GuiGraphicsExtractor graphics) {
+        // The mod draws its own chart/list. Never render the vanilla chart.
     }
 }
