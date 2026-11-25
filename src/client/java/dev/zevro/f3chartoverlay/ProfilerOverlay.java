@@ -51,10 +51,10 @@ public final class ProfilerOverlay {
         ResultField root = entries.removeFirst();
         Font font = client.font;
         int right = 260;
-        int bottom = 0;
         int visibleEntries = Math.min(entries.size(), 14);
         int listHeight = config.showList ? visibleEntries * 10 + 18 : 0;
         int overlayHeight = (config.showPieChart ? 129 : 0) + listHeight;
+        int bottom = overlayHeight;
         float scale = Math.max(0.5F, Math.min(2.0F, config.scalePercent / 100.0F));
         int overlayX = graphics.guiWidth() - Math.round(right * scale) - config.x;
         int overlayY = graphics.guiHeight() - Math.round(overlayHeight * scale) - config.y;
