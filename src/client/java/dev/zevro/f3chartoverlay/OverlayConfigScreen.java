@@ -41,7 +41,6 @@ public final class OverlayConfigScreen extends Screen {
         );
         refreshRateField.setMaxLength(2);
         refreshRateField.setValue(Integer.toString(config.refreshRate));
-        refreshRateField.setFilter(value -> value.isEmpty() || value.matches("\\d{0,2}"));
         this.addRenderableWidget(refreshRateField);
 
         this.addRenderableWidget(Button.builder(Component.literal("Save"), button -> saveAndClose())
@@ -73,7 +72,7 @@ public final class OverlayConfigScreen extends Screen {
 
     @Override
     public void onClose() {
-        this.minecraft.gui.setScreen(null);
+        this.minecraft.setScreen(null);
     }
 
     @Override
