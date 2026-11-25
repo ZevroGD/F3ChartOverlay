@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "dev.zevro.f3chartoverlay.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "ProfilerPieChartAccessor",
+    "DebugScreenOverlayMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
