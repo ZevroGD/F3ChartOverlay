@@ -40,6 +40,7 @@ public final class OverlayConfig {
         INSTANCE.refreshRate = Math.max(1, Math.min(30, INSTANCE.refreshRate));
         INSTANCE.x = Math.max(0, Math.min(4096, INSTANCE.x));
         INSTANCE.y = Math.max(0, Math.min(4096, INSTANCE.y));
+        if (INSTANCE.scalePercent <= 0) INSTANCE.scalePercent = 100;
         INSTANCE.scalePercent = Math.max(50, Math.min(200, INSTANCE.scalePercent));
         save();
     }
