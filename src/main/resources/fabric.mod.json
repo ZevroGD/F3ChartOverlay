@@ -12,6 +12,12 @@
       "dev.zevro.f3chartoverlay.F3ChartOverlayClient"
     ]
   },
+  "mixins": [
+    {
+      "config": "f3chartoverlay.client.mixins.json",
+      "environment": "client"
+    }
+  ],
   "depends": {
     "fabricloader": ">=0.20.1",
     "minecraft": "~26.2",
