@@ -46,7 +46,7 @@ public final class OverlayConfigScreen extends Screen {
         scaleField = createField(center - 30, top + 158, "Scale", config.scalePercent, 3);
 
         this.addRenderableWidget(Button.builder(Component.literal("Edit position & size"),
-            button -> this.minecraft.gui.setScreen(new OverlayPositionScreen(this)))
+            button -> this.minecraft.gui.setScreen(new OverlayPositionScreen(new OverlayConfigScreen(this.parent))))
             .bounds(center - 100, top + 190, 200, 20).build());
         this.addRenderableWidget(Button.builder(Component.literal("Save"), button -> saveAndClose())
             .bounds(center - 100, top + 216, 95, 20).build());
