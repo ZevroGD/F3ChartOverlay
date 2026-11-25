@@ -50,11 +50,18 @@ public final class ProfilerOverlay {
 
         ResultField root = entries.removeFirst();
         Font font = client.font;
-        int right = graphics.guiWidth() - 8;
-        int left = right - 260;
-        int bottom = graphics.guiHeight() - 8;
+        int right = 260;
+        int bottom = 0;
         int visibleEntries = Math.min(entries.size(), 14);
         int listHeight = config.showList ? visibleEntries * 10 + 18 : 0;
+        int overlayHeight = (config.showPieChart ? 129 : 0) + listHeight;
+        float scale = Math.max(0.5F, Math.min(2.0F, config.scalePercent / 100.0F));
+        int overlayX = graphics.guiWidth() - Math.round(right * scale) - config.x;
+        int overlayY = graphics.guiHeight() - Math.round(overlayHeight * scale) - config.y;
+
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(overlayX, overlayY);
+        graphics.pose().scale(scale, scale);
 
         if (config.showPieChart) {
             int chartBottom = config.showList ? bottom - listHeight : bottom;
@@ -71,17 +78,19 @@ public final class ProfilerOverlay {
 
         if (config.showList) {
             int panelTop = bottom - listHeight;
-            graphics.fill(left - 5, panelTop - 5, right + 5, bottom + 5, 0xA9000000);
+            graphics.fill(-5, panelTop - 5, right + 5, bottom + 5, 0xA9000000);
             graphics.text(font, ProfileResults.demanglePath(root.name) + "  " + PERCENT.format(root.globalPercentage) + "%",
-                left, panelTop, 0xFFFFFFFF);
+                0, panelTop, 0xFFFFFFFF);
             for (int i = 0; i < visibleEntries; i++) {
                 ResultField entry = entries.get(i);
                 String name = (i + 1) + ". " + ProfileResults.demanglePath(entry.name);
                 String values = PERCENT.format(entry.percentage) + "%  " + PERCENT.format(entry.globalPercentage) + "%";
                 int rowY = panelTop + 12 + i * 10;
-                graphics.text(font, name, left, rowY, entry.getColor());
+                graphics.text(font, name, 0, rowY, entry.getColor());
                 graphics.text(font, values, right - font.width(values), rowY, entry.getColor());
             }
         }
+
+        graphics.pose().popMatrix();
     }
 }
