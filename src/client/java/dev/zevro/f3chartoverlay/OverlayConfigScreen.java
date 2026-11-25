@@ -9,8 +9,9 @@ import net.minecraft.network.chat.Component;
 public final class OverlayConfigScreen extends Screen {
     private final Screen parent;
     private EditBox refreshRateField;
-    private Button chartButton;
-    private Button listButton;
+    private EditBox rightOffsetField;
+    private EditBox bottomOffsetField;
+    private EditBox scaleField;
 
     public OverlayConfigScreen() {
         this(null);
@@ -25,32 +26,38 @@ public final class OverlayConfigScreen extends Screen {
     protected void init() {
         OverlayConfig config = OverlayConfig.get();
         int center = this.width / 2;
-        int top = this.height / 2 - 72;
+        int top = this.height / 2 - 108;
 
-        chartButton = Button.builder(chartLabel(config.showPieChart), button -> {
+        this.addRenderableWidget(Button.builder(chartLabel(config.showPieChart), button -> {
             config.showPieChart = !config.showPieChart;
             button.setMessage(chartLabel(config.showPieChart));
             OverlayConfig.save();
-        }).bounds(center - 100, top, 200, 20).build();
-        this.addRenderableWidget(chartButton);
+        }).bounds(center - 100, top, 200, 20).build());
 
-        listButton = Button.builder(listLabel(config.showList), button -> {
+        this.addRenderableWidget(Button.builder(listLabel(config.showList), button -> {
             config.showList = !config.showList;
             button.setMessage(listLabel(config.showList));
             OverlayConfig.save();
-        }).bounds(center - 100, top + 26, 200, 20).build();
-        this.addRenderableWidget(listButton);
+        }).bounds(center - 100, top + 26, 200, 20).build());
 
-        refreshRateField = new EditBox(this.font, center - 30, top + 62, 60, 20,
-            Component.literal("Refresh rate"));
-        refreshRateField.setMaxLength(2);
-        refreshRateField.setValue(Integer.toString(config.refreshRate));
-        this.addRenderableWidget(refreshRateField);
+        refreshRateField = createField(center - 30, top + 66, "Refresh rate", config.refreshRate, 2);
+        rightOffsetField = createField(center - 100, top + 112, "Right offset", config.x, 4);
+        bottomOffsetField = createField(center + 15, top + 112, "Bottom offset", config.y, 4);
+        scaleField = createField(center - 30, top + 158, "Scale", config.scalePercent, 3);
 
         this.addRenderableWidget(Button.builder(Component.literal("Save"), button -> saveAndClose())
-            .bounds(center - 100, top + 100, 95, 20).build());
+            .bounds(center - 100, top + 190, 95, 20).build());
         this.addRenderableWidget(Button.builder(Component.literal("Cancel"), button -> this.onClose())
-            .bounds(center + 5, top + 100, 95, 20).build());
+            .bounds(center + 5, top + 190, 95, 20).build());
+    }
+
+    private EditBox createField(int x, int y, String label, int value, int maxLength) {
+        EditBox field = new EditBox(this.font, x, y, 85, 20, Component.literal(label));
+        field.setMaxLength(maxLength);
+        field.setValue(Integer.toString(value));
+        field.setFilter(text -> text.isEmpty() || text.chars().allMatch(Character::isDigit));
+        this.addRenderableWidget(field);
+        return field;
     }
 
     private static Component chartLabel(boolean enabled) {
@@ -61,15 +68,22 @@ public final class OverlayConfigScreen extends Screen {
         return Component.literal("Profiler list: " + (enabled ? "ON" : "OFF"));
     }
 
-    private void saveAndClose() {
-        String value = refreshRateField.getValue().trim();
-        if (!value.isEmpty()) {
-            try {
-                OverlayConfig.get().setRefreshRate(Integer.parseInt(value));
-            } catch (NumberFormatException ignored) {
-                // Keep the previous value if the field is not a valid integer.
-            }
+    private static int readInteger(EditBox field, int fallback) {
+        try {
+            return Integer.parseInt(field.getValue().trim());
+        } catch (NumberFormatException ignored) {
+            return fallback;
         }
+    }
+
+    private void saveAndClose() {
+        OverlayConfig config = OverlayConfig.get();
+        config.setRefreshRate(readInteger(refreshRateField, config.refreshRate));
+        config.setPosition(
+            readInteger(rightOffsetField, config.x),
+            readInteger(bottomOffsetField, config.y)
+        );
+        config.setScalePercent(readInteger(scaleField, config.scalePercent));
         OverlayConfig.save();
         this.onClose();
     }
@@ -82,10 +96,16 @@ public final class OverlayConfigScreen extends Screen {
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         super.extractRenderState(graphics, mouseX, mouseY, delta);
-        graphics.centeredText(this.font, this.title, this.width / 2, this.height / 2 - 105, 0xFFFFFFFF);
-        graphics.text(this.font, "Refresh rate (1-30 updates per second)", this.width / 2 - 100,
-            this.height / 2 - 10, 0xFFFFFFFF);
-        graphics.text(this.font, "Default key: O (change it in Options > Controls)", this.width / 2 - 100,
-            this.height / 2 + 48, 0xFFAAAAAA);
+        int center = this.width / 2;
+        int top = this.height / 2 - 108;
+        graphics.centeredText(this.font, this.title, center, top - 24, 0xFFFFFFFF);
+        graphics.text(this.font, "Refresh rate (1-30 updates/sec)", center - 100, top + 51, 0xFFFFFFFF);
+        graphics.text(this.font, "Right offset", center - 100, top + 98, 0xFFFFFFFF);
+        graphics.text(this.font, "Bottom offset", center + 15, top + 98, 0xFFFFFFFF);
+        graphics.text(this.font, "Scale (50-200%)", center - 100, top + 143, 0xFFFFFFFF);
+        graphics.text(this.font, "Offsets are measured from the bottom-right corner.", center - 100,
+            top + 222, 0xFFAAAAAA);
+        graphics.text(this.font, "Default key: O (rebind in Options > Controls)", center - 100,
+            top + 234, 0xFFAAAAAA);
     }
 }
