@@ -55,7 +55,6 @@ public final class OverlayConfigScreen extends Screen {
         EditBox field = new EditBox(this.font, x, y, 85, 20, Component.literal(label));
         field.setMaxLength(maxLength);
         field.setValue(Integer.toString(value));
-        field.setFilter(text -> text.isEmpty() || text.chars().allMatch(Character::isDigit));
         this.addRenderableWidget(field);
         return field;
     }
