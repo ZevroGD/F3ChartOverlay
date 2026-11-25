@@ -14,6 +14,7 @@ public final class OverlayConfig {
 
     public boolean showPieChart = true;
     public boolean showList = true;
+    // Time between fresh profiler sessions, in seconds.
     public int refreshRate = 10;
     // Distance from the right and bottom edges of the screen, in GUI-scaled pixels.
     public int x = 8;
@@ -54,8 +55,8 @@ public final class OverlayConfig {
         }
     }
 
-    public void setRefreshRate(int value) {
-        refreshRate = Math.max(1, Math.min(30, value));
+    public void setRefreshRate(int seconds) {
+        refreshRate = Math.max(1, Math.min(30, seconds));
         save();
     }
 
