@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "f3chartoverlay",
+  "version": "${version}",
+  "name": "F3 Chart Overlay",
+  "description": "A configurable always-visible overlay for Minecraft's debug profiler pie chart and its entry list.",
+  "authors": ["ZevroGD"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.zevro.f3chartoverlay.F3ChartOverlayClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.20.1",
+    "minecraft": "~26.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
