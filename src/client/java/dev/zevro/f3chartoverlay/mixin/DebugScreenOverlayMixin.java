@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(DebugScreenOverlay.class)
 public abstract class DebugScreenOverlayMixin {
     private static boolean f3chart$wasDebugOverlayVisible;
-    private static boolean f3chart$resetProfilerOnNextVisibleFrame;
+    private static long f3chart$lastProfilerResetNanos;
 
     @Inject(method = "showProfilerChart", at = @At("RETURN"), cancellable = true)
     private void f3chart$keepProfilerRunning(CallbackInfoReturnable<Boolean> cir) {
@@ -23,16 +23,19 @@ public abstract class DebugScreenOverlayMixin {
             return;
         }
 
-        // Reopening the F3 debug overlay starts a fresh vanilla profiler session.
-        // Reproduce that reset for our always-visible overlay with one inactive frame.
+        long now = System.nanoTime();
         boolean debugOverlayVisible = Minecraft.getInstance().debugEntries.isOverlayVisible();
-        if (debugOverlayVisible && !f3chart$wasDebugOverlayVisible) {
-            f3chart$resetProfilerOnNextVisibleFrame = true;
-        }
+        boolean reopenedDebugOverlay = debugOverlayVisible && !f3chart$wasDebugOverlayVisible;
         f3chart$wasDebugOverlayVisible = debugOverlayVisible;
 
-        if (f3chart$resetProfilerOnNextVisibleFrame) {
-            f3chart$resetProfilerOnNextVisibleFrame = false;
+        long resetInterval = 1_000_000_000L / Math.max(1, Math.min(30, config.refreshRate));
+        boolean refreshDue = f3chart$lastProfilerResetNanos == 0L
+            || now - f3chart$lastProfilerResetNanos >= resetInterval;
+
+        if (reopenedDebugOverlay || refreshDue) {
+            // One inactive profiler tick makes Minecraft create a fresh ActiveProfiler.
+            // ProfilerOverlay keeps its last valid results during this reset tick.
+            f3chart$lastProfilerResetNanos = now;
             cir.setReturnValue(false);
             return;
         }
