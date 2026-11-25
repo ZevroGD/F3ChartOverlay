@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 
 public final class F3ChartOverlayClient implements ClientModInitializer {
+    // Settings are accessible through the registered O key mapping in any screen context.
     public static final String MOD_ID = "f3chartoverlay";
     private static KeyMapping openSettingsKey;
 
