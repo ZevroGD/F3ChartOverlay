@@ -40,7 +40,7 @@ public final class OverlayConfigScreen extends Screen {
             OverlayConfig.save();
         }).bounds(center - 100, top + 26, 200, 20).build());
 
-        refreshRateField = createField(center - 30, top + 66, "Profiler reset rate", config.refreshRate, 2);
+        refreshRateField = createField(center - 30, top + 66, "Refresh interval (seconds)", config.refreshRate, 2);
         rightOffsetField = createField(center - 100, top + 112, "Right offset", config.x, 4);
         bottomOffsetField = createField(center + 15, top + 112, "Bottom offset", config.y, 4);
         scaleField = createField(center - 30, top + 158, "Scale", config.scalePercent, 3);
@@ -98,7 +98,7 @@ public final class OverlayConfigScreen extends Screen {
         int center = this.width / 2;
         int top = this.height / 2 - 108;
         graphics.centeredText(this.font, this.title, center, top - 24, 0xFFFFFFFF);
-        graphics.text(this.font, "Profiler reset rate (1-30 resets/sec)", center - 100, top + 51, 0xFFFFFFFF);
+        graphics.text(this.font, "Refresh interval (1-30 seconds)", center - 100, top + 51, 0xFFFFFFFF);
         graphics.text(this.font, "Right offset", center - 100, top + 98, 0xFFFFFFFF);
         graphics.text(this.font, "Bottom offset", center + 15, top + 98, 0xFFFFFFFF);
         graphics.text(this.font, "Scale (50-200%)", center - 100, top + 143, 0xFFFFFFFF);
