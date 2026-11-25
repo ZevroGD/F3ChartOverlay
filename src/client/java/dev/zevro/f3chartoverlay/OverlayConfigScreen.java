@@ -7,12 +7,18 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 public final class OverlayConfigScreen extends Screen {
+    private final Screen parent;
     private EditBox refreshRateField;
     private Button chartButton;
     private Button listButton;
 
     public OverlayConfigScreen() {
+        this(null);
+    }
+
+    public OverlayConfigScreen(Screen parent) {
         super(Component.literal("F3 Chart Overlay"));
+        this.parent = parent;
     }
 
     @Override
@@ -35,10 +41,8 @@ public final class OverlayConfigScreen extends Screen {
         }).bounds(center - 100, top + 26, 200, 20).build();
         this.addRenderableWidget(listButton);
 
-        refreshRateField = new EditBox(
-            this.font, center - 30, top + 62, 60, 20,
-            Component.literal("Refresh rate")
-        );
+        refreshRateField = new EditBox(this.font, center - 30, top + 62, 60, 20,
+            Component.literal("Refresh rate"));
         refreshRateField.setMaxLength(2);
         refreshRateField.setValue(Integer.toString(config.refreshRate));
         this.addRenderableWidget(refreshRateField);
@@ -72,7 +76,7 @@ public final class OverlayConfigScreen extends Screen {
 
     @Override
     public void onClose() {
-        this.minecraft.gui.setScreen(null);
+        this.minecraft.gui.setScreen(this.parent);
     }
 
     @Override
