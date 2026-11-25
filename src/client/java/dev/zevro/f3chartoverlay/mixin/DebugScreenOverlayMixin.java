@@ -28,9 +28,9 @@ public abstract class DebugScreenOverlayMixin {
         boolean reopenedDebugOverlay = debugOverlayVisible && !f3chart$wasDebugOverlayVisible;
         f3chart$wasDebugOverlayVisible = debugOverlayVisible;
 
-        long resetInterval = 1_000_000_000L / Math.max(1, Math.min(30, config.refreshRate));
+        long refreshInterval = Math.max(1, Math.min(30, config.refreshRate)) * 1_000_000_000L;
         boolean refreshDue = f3chart$lastProfilerResetNanos == 0L
-            || now - f3chart$lastProfilerResetNanos >= resetInterval;
+            || now - f3chart$lastProfilerResetNanos >= refreshInterval;
 
         if (reopenedDebugOverlay || refreshDue) {
             // One inactive profiler tick makes Minecraft create a fresh ActiveProfiler.
