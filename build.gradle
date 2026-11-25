@@ -10,7 +10,9 @@ base {
 }
 
 repositories {
-    // Fabric Loom supplies the Minecraft and Fabric Maven repositories.
+    maven {
+        url = "https://maven.terraformersmc.com/releases"
+    }
 }
 
 loom {
@@ -27,6 +29,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    modCompileOnly "com.terraformersmc:modmenu:20.0.3"
 }
 
 def modVersionForResources = project.version.toString()
