@@ -17,7 +17,6 @@ import java.util.Locale;
 public final class ProfilerOverlay {
     private static final DecimalFormat PERCENT = new DecimalFormat("##0.00", DecimalFormatSymbols.getInstance(Locale.ROOT));
     private static ProfileResults cachedResults;
-    private static long lastRefreshNanos;
 
     private ProfilerOverlay() {}
 
@@ -30,18 +29,19 @@ public final class ProfilerOverlay {
 
         ProfilerPieChart vanillaChart = client.getDebugOverlay().getProfilerPieChart();
         ProfileResults latest = ((ProfilerPieChartAccessor) vanillaChart).f3chart$getResults();
-        long now = System.nanoTime();
-        long refreshInterval = 1_000_000_000L / Math.max(1, Math.min(30, config.refreshRate));
 
-        if (latest == null) {
-            cachedResults = null;
-            lastRefreshNanos = 0L;
-            return;
+        // A scheduled profiler reset produces one null-results tick. Keep displaying
+        // the previous snapshot until the new profiler has collected usable data.
+        if (latest != null) {
+            List<ResultField> freshEntries = latest.getTimes(
+                ((ProfilerPieChartAccessor) vanillaChart).f3chart$getTreePath()
+            );
+            if (freshEntries.size() > 1) {
+                cachedResults = latest;
+            }
         }
-        if (cachedResults == null || now - lastRefreshNanos >= refreshInterval) {
-            cachedResults = latest;
-            lastRefreshNanos = now;
-        }
+
+        if (cachedResults == null) return;
 
         List<ResultField> entries = new ArrayList<>(cachedResults.getTimes(
             ((ProfilerPieChartAccessor) vanillaChart).f3chart$getTreePath()
