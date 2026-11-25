@@ -32,11 +32,16 @@ public final class ProfilerOverlay {
         ProfileResults latest = ((ProfilerPieChartAccessor) vanillaChart).f3chart$getResults();
         long now = System.nanoTime();
         long refreshInterval = 1_000_000_000L / Math.max(1, Math.min(30, config.refreshRate));
-        if (latest != null && (cachedResults == null || now - lastRefreshNanos >= refreshInterval)) {
+
+        if (latest == null) {
+            cachedResults = null;
+            lastRefreshNanos = 0L;
+            return;
+        }
+        if (cachedResults == null || now - lastRefreshNanos >= refreshInterval) {
             cachedResults = latest;
             lastRefreshNanos = now;
         }
-        if (cachedResults == null) return;
 
         List<ResultField> entries = new ArrayList<>(cachedResults.getTimes(
             ((ProfilerPieChartAccessor) vanillaChart).f3chart$getTreePath()
@@ -48,7 +53,8 @@ public final class ProfilerOverlay {
         int right = graphics.guiWidth() - 8;
         int left = right - 260;
         int bottom = graphics.guiHeight() - 8;
-        int listHeight = config.showList ? entries.size() * 10 + 18 : 0;
+        int visibleEntries = Math.min(entries.size(), 14);
+        int listHeight = config.showList ? visibleEntries * 10 + 18 : 0;
 
         if (config.showPieChart) {
             int chartBottom = config.showList ? bottom - listHeight : bottom;
@@ -68,9 +74,9 @@ public final class ProfilerOverlay {
             graphics.fill(left - 5, panelTop - 5, right + 5, bottom + 5, 0xA9000000);
             graphics.text(font, ProfileResults.demanglePath(root.name) + "  " + PERCENT.format(root.globalPercentage) + "%",
                 left, panelTop, 0xFFFFFFFF);
-            for (int i = 0; i < entries.size(); i++) {
+            for (int i = 0; i < visibleEntries; i++) {
                 ResultField entry = entries.get(i);
-                String name = (i + 1) + ". " + entry.name;
+                String name = (i + 1) + ". " + ProfileResults.demanglePath(entry.name);
                 String values = PERCENT.format(entry.percentage) + "%  " + PERCENT.format(entry.globalPercentage) + "%";
                 int rowY = panelTop + 12 + i * 10;
                 graphics.text(font, name, left, rowY, entry.getColor());
