@@ -6,10 +6,10 @@ A client-side Fabric mod for Minecraft Java 26.2. It keeps the vanilla debug pro
 
 - Always-visible profiler pie chart; F3 does not need to be held open.
 - Pie chart and profiler entry list can be enabled independently.
-- Configurable profiler reset rate from 1 to 30 resets per second.
+- Configurable profiler refresh interval from 1 to 30 seconds.
 - Configurable overlay scale from 50% to 200%.
 - Configurable position using right and bottom offsets.
-- The profiler is periodically restarted at the configured reset rate. Reopening the F3 debug screen also starts a fresh profiler collection session.
+- The profiler is periodically restarted at the configured interval. Reopening the F3 debug screen also starts a fresh profiler collection session.
 - In-game settings screen, opened with **O** by default or through Mod Menu.
 - The settings key can be rebound under **Options → Controls → F3 Chart Overlay**.
 - Settings are saved to config/f3chartoverlay.json.
@@ -18,12 +18,12 @@ A client-side Fabric mod for Minecraft Java 26.2. It keeps the vanilla debug pro
 
 Open the settings with **O** or through the Mod Menu configuration button. The pie chart and profiler list have separate toggles.
 
-- **Profiler reset rate:** 1 to 30 resets per second. Each reset starts a fresh profiling session; the previous chart stays visible while the new session gathers data.
+- **Refresh interval:** 1 to 30 seconds between fresh profiler sessions. The previous chart stays visible while the new session gathers data.
 - **Right offset:** distance from the right edge of the screen.
 - **Bottom offset:** distance from the bottom edge of the screen.
 - **Scale:** 50% to 200%.
 
-The default position is 8 GUI-scaled pixels from the right and bottom edges, at 100% scale. Values are clamped to their supported ranges.
+The default refresh interval is 10 seconds. The default position is 8 GUI-scaled pixels from the right and bottom edges, at 100% scale. Values are clamped to their supported ranges.
 
 ## Build
 
