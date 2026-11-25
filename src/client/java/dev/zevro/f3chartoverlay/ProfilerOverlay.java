@@ -16,9 +16,31 @@ import java.util.Locale;
 
 public final class ProfilerOverlay {
     private static final DecimalFormat PERCENT = new DecimalFormat("##0.00", DecimalFormatSymbols.getInstance(Locale.ROOT));
+    private static final int OVERLAY_WIDTH = 270;
     private static ProfileResults cachedResults;
 
     private ProfilerOverlay() {}
+
+    public static int getOverlayWidth() {
+        return OVERLAY_WIDTH;
+    }
+
+    public static int getOverlayHeight() {
+        OverlayConfig config = OverlayConfig.get();
+        int listHeight = 0;
+        if (config.showList) {
+            int visibleEntries = 14;
+            if (cachedResults != null) {
+                ProfilerPieChart chart = Minecraft.getInstance().getDebugOverlay().getProfilerPieChart();
+                List<ResultField> entries = cachedResults.getTimes(
+                    ((ProfilerPieChartAccessor) chart).f3chart$getTreePath()
+                );
+                visibleEntries = Math.min(Math.max(0, entries.size() - 1), 14);
+            }
+            listHeight = visibleEntries * 10 + 18;
+        }
+        return (config.showPieChart ? 129 : 0) + listHeight;
+    }
 
     public static void render(GuiGraphicsExtractor graphics, net.minecraft.client.DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
