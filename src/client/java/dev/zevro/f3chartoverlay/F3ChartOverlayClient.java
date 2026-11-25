@@ -29,8 +29,8 @@ public final class F3ChartOverlayClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (openSettingsKey.consumeClick()) {
-                if (client.screen == null) {
-                    client.setScreen(new OverlayConfigScreen());
+                if (client.gui.screen() == null) {
+                    client.gui.setScreen(new OverlayConfigScreen());
                 }
             }
         });
@@ -42,6 +42,6 @@ public final class F3ChartOverlayClient implements ClientModInitializer {
     }
 
     public static void openSettings(Minecraft client) {
-        client.setScreen(new OverlayConfigScreen());
+        client.gui.setScreen(new OverlayConfigScreen());
     }
 }
