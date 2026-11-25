@@ -8,6 +8,7 @@ A client-side Fabric mod for Minecraft Java 26.2. It keeps the vanilla debug pro
 - Pie chart and profiler entry list can be enabled independently.
 - Configurable profiler refresh interval from 1 to 30 seconds.
 - Configurable overlay scale from 50% to 200%.
+- Drag-and-drop overlay positioning and mouse-wheel resizing in the edit screen.
 - Configurable position using right and bottom offsets.
 - The profiler is periodically restarted at the configured interval. Reopening the F3 debug screen also starts a fresh profiler collection session.
 - In-game settings screen, opened with **O** by default or through Mod Menu.
@@ -18,6 +19,12 @@ A client-side Fabric mod for Minecraft Java 26.2. It keeps the vanilla debug pro
 
 Open the settings with **O** or through the Mod Menu configuration button. The pie chart and profiler list have separate toggles.
 
+Choose **Edit position & size** to open the mouse editor:
+- Drag the overlay with the left mouse button to move it.
+- Scroll over the overlay to resize it in 5% increments, from 50% to 200%.
+- Press Escape to return to settings.
+
+Other settings:
 - **Refresh interval:** 1 to 30 seconds between fresh profiler sessions. The previous chart stays visible while the new session gathers data.
 - **Right offset:** distance from the right edge of the screen.
 - **Bottom offset:** distance from the bottom edge of the screen.
